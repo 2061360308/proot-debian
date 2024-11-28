@@ -9,8 +9,8 @@ init()
 
 banner()
 
-question = GREEN("这个脚本用来自动完成利用Proot-distro\
-在Termux配置Debian + LXQt的LInux桌面\n 是否继续")
+question = "这个脚本用来自动完成利用Proot-distro\
+在Termux配置Debian + LXQt的LInux桌面\n 是否继续"
 ask_confirmation(question)
 if not ask_confirmation(question):
     print("用户选择退出脚本")
