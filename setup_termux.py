@@ -44,7 +44,7 @@ run_command_in_container(create_user_command)
 def add_sudoers_entry(username):
     print(GREEN(f"为用户 {username} 添加 sudoers 条目"))
     prefix = os.getenv("PREFIX")
-    sudoers_file = os.path.join(prefix, "usr/var/lib/proot-distro/installed-rootfs/debian/etc/sudoers")
+    sudoers_file = os.path.join(prefix, "var/lib/proot-distro/installed-rootfs/debian/etc/sudoers")
     backup_file = sudoers_file + ".bak"
     
     # 备份 sudoers 文件
@@ -99,7 +99,7 @@ deb http://mirrors.ustc.edu.cn/debian bookworm-updates main contrib non-free non
 """
 
     prefix = os.getenv("PREFIX")
-    sources_list = os.path.join(prefix, "usr/var/lib/proot-distro/installed-rootfs/debian/etc/apt/sources.list")
+    sources_list = os.path.join(prefix, "var/lib/proot-distro/installed-rootfs/debian/etc/apt/sources.list")
     # 备份并删除 sources_list
     backup_sources_list = sources_list + ".bak"
     if os.path.exists(sources_list):
@@ -121,7 +121,7 @@ def configure_locales_in_container(distro="debian"):
 
     # 取消注释 /etc/locale.gen 中的 en_US.UTF-8 UTF-8
     prefix = os.getenv("PREFIX")
-    locale_gen_file = os.path.join(prefix, f"usr/var/lib/proot-distro/installed-rootfs/{distro}/etc/locale.gen")
+    locale_gen_file = os.path.join(prefix, f"var/lib/proot-distro/installed-rootfs/{distro}/etc/locale.gen")
     backup_locale_gen_file = locale_gen_file + ".bak"
     
     # 备份 locale.gen 文件
@@ -146,7 +146,7 @@ def configure_locales_in_container(distro="debian"):
         run_command_in_container(("生成语言环境", "locale-gen"), distro)
 
         # 设置默认语言环境
-        locale_conf_file = os.path.join(prefix, f"usr/var/lib/proot-distro/installed-rootfs/{distro}/etc/default/locale")
+        locale_conf_file = os.path.join(prefix, f"var/lib/proot-distro/installed-rootfs/{distro}/etc/default/locale")
         with open(locale_conf_file, 'w') as file:
             file.write("LANG=en_US.UTF-8\n")
         
@@ -173,7 +173,7 @@ def setup_chinese_input():
                                   "fcitx5-frontend-gtk2", "fcitx5-frontend-qt5"))
 
     prefix = os.getenv("PREFIX")
-    profile = os.path.join(prefix, "usr/var/lib/proot-distro/installed-rootfs/debian/etc/profile")
+    profile = os.path.join(prefix, "var/lib/proot-distro/installed-rootfs/debian/etc/profile")
     profile_content = """# 设置 fcitx 输入法
 export XMODIFIERS=@im=fcitx
 export GTK_IM_MODULE=fcitx 
@@ -186,7 +186,7 @@ setup_chinese_input()
 def setup_lxqt():
     install_package_in_container(("debconf-utils"))
     prefix = os.getenv("PREFIX")
-    debconf_file = os.path.join(prefix, "/usr/local/src/proot-debian/debconf.txt")
+    debconf_file = os.path.join(prefix, "local/src/proot-debian/debconf.txt")
     run_command_in_container(("设置 debconf", f"debconf-set-selections < {debconf_file}"))
     banner()
     print(GREEN("安装 LXQt 桌面环境"))

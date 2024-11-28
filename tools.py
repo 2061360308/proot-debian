@@ -101,7 +101,7 @@ def ask_confirmation(prompt, default="yes"):
 
 def create_quick_command(**kwargs):
     src_files = ["btx11", "stx11"]
-    dest_dir = os.path.join(os.getenv("PREFIX"), "usr", "bin")
+    dest_dir = os.path.join(os.getenv("PREFIX"), "bin")
 
     for file in src_files:
         src_path = os.path.join(os.getcwd(), file)
