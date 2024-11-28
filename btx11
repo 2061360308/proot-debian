@@ -1,0 +1,87 @@
+#!/data/data/com.termux/files/usr/bin/bash
+
+USER_HOME="<USER-HOME>"
+USER="<USER>"
+
+# check -o
+open_existing=false
+while getopts "o" opt; do
+  case $opt in
+    o)
+     open_existing=true
+     ;;
+    *)
+     ;;
+  esac
+done
+
+# env DISPLAY=:1.0 dbus-launch --exit-with-session startlxqt > /dev/null 2>&1 &
+# nohup proot-distro login debian --shared-tmp --bind $HOME/storage/shared/Music:/root/Music --bind $HOME/storage/shared/Download:/root/Download --bind $HOME/storage/shared/Pictures:/root/Pictures --bind $HOME/storage/shared/Videos:/root/Videos --bind $HOME/storage/shared:/root/storage -- bash -c "env DISPLAY=:1.0 dbus-launch --exit-with-session startlxqt" > /dev/null 2>&1 &
+
+if [ "$open_existing" = true ]; then
+  # check "desktop-server" tmux session
+  if tmux has-session -t desktopserver 2>/dev/null; then
+    tmux attach-session -t desktop-server
+    exit 0
+  else
+    echo "no desktop-server opend, open new session now."
+    processes=$(pgrep -f com.termux.x11)
+    for pid in $processes; do
+        echo "killing x11 server: $pid"
+        kill $pid
+    done
+    echo "open new x11 server"
+    XDG_RUNTIME_DIR=\${TMPDIR} termux-x11 :1.0 &
+    sleep 1
+    echo "jump to x11 app"
+    am start --user 0 -n com.termux.x11/com.termux.x11.MainActivity > /dev/null 2>&1
+    sleep 1
+  fi
+else
+  echo "close old desktop-server tmux session"
+  tmux kill-session -t desktop-server
+
+  processes=$(pgrep -f com.termux.x11)
+  for pid in $processes; do
+      echo "killing x11 server: $pid"
+      kill $pid
+  done
+  echo "open new x11 server"
+  XDG_RUNTIME_DIR=\${TMPDIR} termux-x11 :1.0 &
+  sleep 1
+  echo "jump to x11 app"
+  am start --user 0 -n com.termux.x11/com.termux.x11.MainActivity > /dev/null 2>&1
+  sleep 1
+fi
+
+# close pulseaudio
+processes=$(pgrep -f pulseaudio)
+for pid in $processes; do
+    echo "killing pulseaudio: $pid"
+    kill $pid
+done
+
+# close virgl renderer
+processes=$(grep -f virglrenderer-android)
+for pid in $process; do
+    echo "killing virglrenderer-android $pid"
+    kill $pid
+done
+
+# echo "Starting pulseaudio server"
+# pulseaudio --start --load="moudle-native-protocol-tcp auth-ip-acl=127.0.0.1 auth-anonymous=1" --exit-idle-time=-1
+# pacmd load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1 auth-anonymous=1
+
+echo "Starting Virgl Renderer"
+virgl_test_server_android &
+
+echo "open proot-distro desktop"
+tmux new-session -d -s desktop-server "proot-distro login --user $USER debian --shared-tmp --bind /data/data/com.termux/files/usr:/termux --bind $HOME/storage/shared/Music:$USER_HOME/Music --bind $HOME/storage/shared/Download:$USER_HOME/Downloads --bind $HOME/storage/shared/Pictures:$USER_HOME/Pictures --bind $HOME/storage/shared/Videos:$USER_HOME/Videos --bind $HOME/storage/shared:$USER_HOME/storage -- bash -c 'source /etc/profile; source ~/.barhrc; export PULSE_SERVER=tcp:127.0.0.1; env DISPLAY=:1.0 dbus-launch --exit-with-session startlxqt'"
+# --bind /data/data/com.termux/files/usr:/termux 
+
+pulseaudio --start --load="module-native-protocol-tcp auth-ip-acl=127.0.0.1 auth-anonymous=1" --exit-idle-time=-1
+pacmd load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1 auth-anonymous=1
+
+if [ "$open_existing" = true ]; then
+  tmux attach-session -t desktop-server
+fi

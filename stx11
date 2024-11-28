@@ -1,0 +1,14 @@
+#!/data/data/com.termux/files/usr/bin/bash
+
+processes=$(pgrep -f com.termux.x11)
+for pid in $processes; do
+    echo "killing x11 server: $pid"
+    kill $pid
+done
+if tmux has-session -t desktop-server 2>/dev/null; then
+  echo "killing existing "desktop-server" tmux session"
+  tmux kill-session -t desktop-server
+fi
+
+# stop all server
+killall -9 termux-x11 pulseaudio virgl_test_server_android termux-wake-lock

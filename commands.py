@@ -1,0 +1,6 @@
+init_termux_source = ("启用 Termux x11和root软件源", "pkg install x11-repo root-repo -y")
+update_termux_source = ("更新pkg软件源", "pkg update")
+get_storage_authority = ("获取存储权限", "termux-setup-storage")
+install_debian = ("Proot-distro 安装Debian容器", "proot-distro install debian")
+create_user = ("创建新用户", "adduser <username>")
+update_apt_source = ("更新apt软件源", "apt update")
