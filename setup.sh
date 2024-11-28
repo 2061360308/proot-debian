@@ -4,7 +4,7 @@
 pkg update -y
 
 # 安装 git 和 python3
-pkg install -y git openssl python python-pip
+pkg install -y ca-certificates git openssl python python-pip
 
 # 安装 Python 软件包
 pip install colorama sh requests
