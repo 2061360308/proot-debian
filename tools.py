@@ -43,7 +43,7 @@ def run_command_in_container(command):
     print(GREEN(f"当前执行: {task_name}"))
     print(GREEN(f"shell: 【{command}】\n"))
     try:
-        sh.proot_distro("login", "debian", "--", "/bin/sh", "-c", command, _out=process_output, _err_to_out=True)
+        sh.proot_distro("login", "debian", "--", "/bin/sh", "-c", command)
     except sh.ErrorReturnCode as e:
         print(Fore.RED + f"Failed to run command: {e}" + Style.RESET_ALL)
 
@@ -53,7 +53,7 @@ def run_command(command):
     print(GREEN(f"当前执行: {task_name}"))
     print(GREEN(f"shell: 【{command}】\n"))
     try:
-        sh.bash("-c", command, _out=process_output, _err_to_out=True)
+        sh.bash("-c", command)
     except sh.ErrorReturnCode as e:
         print(Fore.RED + f"Failed to run command: {e}" + Style.RESET_ALL)
 

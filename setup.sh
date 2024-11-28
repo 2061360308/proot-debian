@@ -22,4 +22,14 @@ echo "python3 $CLONE_DIR/setup_termux.py" >> $SETUP_SCRIPT
 # 赋予执行权限
 chmod +x $SETUP_SCRIPT
 
-setup-proot-debian
+clear
+
+R="$(printf '\033[1;31m')"
+G="$(printf '\033[1;32m')"
+Y="$(printf '\033[1;33m')"
+B="$(printf '\033[1;34m')"
+C="$(printf '\033[1;36m')"
+W="$(printf '\033[0m')"
+BOLD="$(printf '\033[1m')"
+
+echo "${G}脚本下载完成！请键入 setup-proot-debian 命令继续！${W}"
