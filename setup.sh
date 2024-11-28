@@ -17,9 +17,8 @@ CLONE_DIR="$PREFIX/local/src/proot-debian"
 mkdir -p "$CLONE_DIR"
 
 if [ -d "$CLONE_DIR" ]; then
-    echo "Directory $CLONE_DIR already exists. Updating repository..."
-    cd $CLONE_DIR
-    git pull
+    echo "Directory $CLONE_DIR already exists. Delete ..."
+    rm -f -r $CLONE_DIR
 else
     echo "Cloning repository from $GIT_REPO_URL to $CLONE_DIR..."
     git clone $GIT_REPO_URL $CLONE_DIR
@@ -32,8 +31,6 @@ echo "python3 $CLONE_DIR/setup_termux.py" >> $SETUP_SCRIPT
 
 # 赋予执行权限
 chmod +x $SETUP_SCRIPT
-
-clear
 
 setup-proot-debian
 
