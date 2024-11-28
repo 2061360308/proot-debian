@@ -43,17 +43,18 @@ def run_command_in_container(command):
     print(GREEN(f"当前执行: {task_name}"))
     print(GREEN(f"shell: 【{command}】\n"))
     try:
-        sh.proot_distro("login", "debian", "--", "/bin/sh", "-c", command)
+        sh.proot_distro("login", "debian", "--", "/bin/sh", "-c", command, _iter=True, _err_to_out=True)
     except sh.ErrorReturnCode as e:
         print(Fore.RED + f"Failed to run command: {e}" + Style.RESET_ALL)
 
 def run_command(command):
+    banner()
     task_name = command[0]
     command = command[1]
     print(GREEN(f"当前执行: {task_name}"))
     print(GREEN(f"shell: 【{command}】\n"))
     try:
-        sh.bash("-c", command)
+        sh.bash("-c", command, _iter=True, _err_to_out=True)
     except sh.ErrorReturnCode as e:
         print(Fore.RED + f"Failed to run command: {e}" + Style.RESET_ALL)
 
@@ -134,9 +135,9 @@ def install_package(packages, pkg=False):
         try:
             # 运行安装命令
             if pkg:
-                sh.pkg("install", "-y", package)
+                sh.pkg("install", "-y", package, _iter=True, _err_to_out=True)
             else:
-                sh.sudo("apt-get", "install", "-y", package)
+                sh.sudo("apt-get", "install", "-y", package, _iter=True, _err_to_out=True)
             # 检测包是否成功安装
             result = sh.which(package)
             if result:
@@ -153,7 +154,7 @@ def install_package_in_container(packages, distro="debian"):
         try:
             # 运行安装命令
             command = f"apt install -y {package}"
-            sh.proot_distro("login", distro, "--", "/bin/sh", "-c", command)
+            sh.proot_distro("login", distro, "--", "/bin/sh", "-c", command, _iter=True, _err_to_out=True)
             # 检测包是否成功安装
             check_command = f"which {package}"
             result = sh.proot_distro("login", distro, "--", "/bin/sh", "-c", check_command).strip()

@@ -46,6 +46,20 @@ def add_sudoers_entry(username):
     prefix = os.getenv("PREFIX")
     sudoers_file = os.path.join(prefix, "var/lib/proot-distro/installed-rootfs/debian/etc/sudoers")
     backup_file = sudoers_file + ".bak"
+
+    # 检查文件是否存在，如果不存在则创建
+    if not os.path.exists(sudoers_file):
+        with open(sudoers_file, 'w') as f:
+            f.write("# sudoers file.\n")
+            f.write("# See sudoers(5) for more information on syntax and usage.\n")
+            f.write("\n")
+            f.write("root    ALL=(ALL:ALL) ALL\n")
+            f.write(f"{username}    ALL=(ALL:ALL) NOPASSWD:ALL\n")
+
+        # 设置文件权限为 0440
+        os.chmod(sudoers_file, 0o440)
+
+        return
     
     # 备份 sudoers 文件
     shutil.copy2(sudoers_file, backup_file)
