@@ -11,8 +11,16 @@ pip install colorama sh requests
 
 # 克隆 git 仓库到 $PREFIX/usr/local/src 下
 GIT_REPO_URL="https://github.com/2061360308/proot-debian.git"  # 替换为实际的仓库 URL
-CLONE_DIR="$PREFIX/local/src"
-git clone $GIT_REPO_URL $CLONE_DIR
+CLONE_DIR="$PREFIX/local/src/proot-debian"
+
+if [ -d "$CLONE_DIR" ]; then
+    echo "Directory $CLONE_DIR already exists. Updating repository..."
+    cd $CLONE_DIR
+    git pull
+else
+    echo "Cloning repository from $GIT_REPO_URL to $CLONE_DIR..."
+    git clone $GIT_REPO_URL $CLONE_DIR
+fi
 
 # 在 $PREFIX/usr/bin 目录下创建 setup-proot-debian 脚本
 SETUP_SCRIPT="$PREFIX/bin/setup-proot-debian"
@@ -24,12 +32,14 @@ chmod +x $SETUP_SCRIPT
 
 clear
 
-R="$(printf '\033[1;31m')"
-G="$(printf '\033[1;32m')"
-Y="$(printf '\033[1;33m')"
-B="$(printf '\033[1;34m')"
-C="$(printf '\033[1;36m')"
-W="$(printf '\033[0m')"
-BOLD="$(printf '\033[1m')"
+setup-proot-debian
 
-echo "${G}脚本下载完成！请键入 setup-proot-debian 命令继续！${W}"
+# R="$(printf '\033[1;31m')"
+# G="$(printf '\033[1;32m')"
+# Y="$(printf '\033[1;33m')"
+# B="$(printf '\033[1;34m')"
+# C="$(printf '\033[1;36m')"
+# W="$(printf '\033[0m')"
+# BOLD="$(printf '\033[1m')"
+
+# echo "${G}脚本下载完成！请键入 setup-proot-debian 命令继续！${W}"
