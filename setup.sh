@@ -13,13 +13,13 @@ pip install colorama sh requests
 GIT_REPO_URL="https://github.com/2061360308/proot-debian.git"  # 替换为实际的仓库 URL
 CLONE_DIR="$PREFIX/local/src/proot-debian"
 
-# 创建路径
-mkdir -p "$CLONE_DIR"
-
 if [ -d "$CLONE_DIR" ]; then
-    echo "Directory $CLONE_DIR already exists. Delete ..."
-    rm -f -r $CLONE_DIR
+    echo "Directory $CLONE_DIR already exists. Updating repository..."
+    cd $CLONE_DIR
+    git pull
 else
+    # 创建路径
+    mkdir -p "$CLONE_DIR"
     echo "Cloning repository from $GIT_REPO_URL to $CLONE_DIR..."
     git clone $GIT_REPO_URL $CLONE_DIR
 fi
