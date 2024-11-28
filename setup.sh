@@ -15,6 +15,7 @@ CLONE_DIR="$PREFIX/local/src/proot-debian"
 
 if [ -d "$CLONE_DIR" ]; then
     echo "Directory $CLONE_DIR already exists. Updating repository..."
+    echo "Updating repository..."
     cd $CLONE_DIR
     git pull
 else
