@@ -4,7 +4,7 @@
 pkg update -y
 
 # 安装 git 和 python3
-pkg install -y git python3 python3-pip
+pkg install -y git python python-pip
 
 # 安装 Python 软件包
 pip install colorama sh requests
